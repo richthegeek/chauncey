@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const traverse = require('traverse');
 
-function Redbeard (...args) {
+function Kojak (...args) {
   
   let Objects = args;
   let ObjectData = {};
@@ -114,4 +114,4 @@ function Redbeard (...args) {
   return self;
 }
 
-module.exports = Redbeard;
+module.exports = Kojak;

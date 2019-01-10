@@ -1,5 +1,5 @@
 {
-  "name": "redbeard",
+  "name": "kojak",
   "version": "1.0.0",
   "description": "Helper for managing settings objects in multiple environments",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://gitub.com/richthegeek/redbeard"
+    "url": "http://gitub.com/richthegeek/kojak"
   },
   "keywords": [
     "settings",
