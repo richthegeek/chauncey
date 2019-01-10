@@ -1,0 +1,27 @@
+{
+  "name": "redbeard",
+  "version": "1.0.0",
+  "description": "Helper for managing settings objects in multiple environments",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitub.com/richthegeek/redbeard"
+  },
+  "keywords": [
+    "settings",
+    "setting",
+    "config"
+  ],
+  "author": "Richard Lyon",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "traverse": "^0.6.6"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
+}
