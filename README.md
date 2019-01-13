@@ -30,9 +30,15 @@ Changes the chosen environment for path-resolution.
 Imports properties from `process.env` according to provided options.
 ```javascript
 settings.useEnv({
-    filter: /.*/, // regex for filtering keys which are added
+    prefix: '', // prefix string
+    requirePrefix: false, // only add keys which match the prefix
+    stripPrefix: false, // remove the prefix from keys that start with it
+
+    castNumbers: false, // should numeric values be cast as Numbers
+    
     split: /__/, // regex for splitting keys into nested parameters
-    override: true // whether to override, or only provide defaults
+    filter: /.*/, // regex for filtering keys which are added
+    override: true // whether to override, or only provide defaults,
 })
 ```
 
@@ -70,6 +76,20 @@ settings.useEnv();
 console.log(settings.node_port); // '9182'
 console.log(settings.nested.value); // 'hello'
 ```
+
+### Importing some parameters from envvars
+```javascript
+// NODE_PORT=9182, NESTED__VALUE=hello
+let settings = new Kojak();
+settings.useEnv({
+    prefix: 'NODE_',
+    requirePrefix: true,
+    stripPrefix: true,
+    castNumbers: true
+});
+console.log(settings.port); // 9182
+```
+
 
 ### Getting a nested value with a default
 ```javascript

@@ -50,9 +50,22 @@ describe('process.env importing', () => {
 
   it('should support basic settings', () => {
     process.env.FOO = 'bar';
+    process.env.PORT = '1234';
     const settings = Kojak();
     settings.useEnv();
     assert.equal(settings.foo, 'bar')
+    assert.equal(settings.port, '1234')
+    assert.equal(typeof settings.port, 'string')
+  })
+
+  it('should support Number casting', () => {
+    process.env.FOO = 'bar';
+    process.env.PORT = '1234'
+    const settings = Kojak();
+    settings.useEnv({castNumbers: true});
+    assert.equal(settings.foo, 'bar')
+    assert.equal(settings.port, 1234)
+    assert.equal(typeof settings.port, 'number')
   })
 
   it('should support nested settings', () => {
@@ -80,4 +93,48 @@ describe('process.env importing', () => {
     assert.equal(settings.person.name, 'bob')
   })
 
+  it('should support a (require=true,strip=false) prefix', () => {
+    process.env.NODE_PORT = '1234';
+    process.env.TEST = 'test'
+    
+    const settings = Kojak();
+    settings.useEnv({
+      prefix: 'node_',
+      requirePrefix: true,
+      stripPrefix: false
+    });
+    
+    assert.equal(settings.node_port, '1234')
+    assert.equal(settings.test, undefined)
+  })
+
+  it('should support a (require=false,strip=true) prefix', () => {
+    process.env.NODE_PORT = '1234';
+    process.env.TEST = 'test'
+    
+    const settings = Kojak();
+    settings.useEnv({
+      prefix: 'node_',
+      requirePrefix: false,
+      stripPrefix: true
+    });
+    
+    assert.equal(settings.port, '1234')
+    assert.equal(settings.test, 'test')
+  })
+
+  it('should support a (require=true,strip=true) prefix', () => {
+    process.env.NODE_PORT = '1234';
+    process.env.TEST = 'test'
+    
+    const settings = Kojak();
+    settings.useEnv({
+      prefix: 'node_',
+      requirePrefix: true,
+      stripPrefix: true
+    });
+    
+    assert.equal(settings.port, '1234')
+    assert.equal(settings.test, undefined)
+  })  
 })

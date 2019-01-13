@@ -11,18 +11,40 @@ function Kojak (...args) {
 
   function useEnv (options) {
     _.defaults(options, {
+      prefix: '',
+      stripPrefix: false,
+      requirePrefix: false,
       filter: /.*/,
       split: /__/,
-      override: true
+      override: true,
+      castNumbers: false
     })
+    options.prefix = options.prefix.toLowerCase();
     options.filter = new RegExp(options.filter.source.toLowerCase(), options.filter.flags);
     options.split = new RegExp(options.split.source.toLowerCase(), 'gi')
 
     _.forEach(process.env, (value, key) => {
       key = key.toLowerCase();
-      if (options.filter.test(key)) {
-        _.set(envObject, key.split(options.split), value)
+
+      // prefix rules
+      if (_.startsWith(key, options.prefix)) {
+        if (options.stripPrefix) {
+          key = key.slice(options.prefix.length)
+        }
+      } else if (options.requirePrefix) {
+        return;
       }
+
+      // filter rules
+      if (!options.filter.test(key)) {
+        return;
+      }
+
+      if (options.castNumbers && !isNaN(Number(value))) {
+        value = Number(value);
+      }
+
+      _.set(envObject, key.split(options.split), value)
     })
 
     // always set to define the setters
