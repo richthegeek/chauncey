@@ -61,7 +61,7 @@ function Kojak (...args) {
   }
 
   function buildObjectData () {
-    ObjectData = _.merge.apply(_, [envObject, Data].concat(Objects))
+    ObjectData = _.defaults.apply(_, [{}, envObject, Data].concat(Objects))
 
     traverse(ObjectData).forEach(function (x) {
       if (_.has(x, env)) {
