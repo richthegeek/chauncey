@@ -1,6 +1,6 @@
 {
   "name": "kojak",
-  "version": "1.2",
+  "version": "1.2.0",
   "description": "Helper for managing settings objects in multiple environments",
   "main": "index.js",
   "scripts": {
