@@ -7,6 +7,7 @@ function Kojak (...args) {
   let ObjectData = {};
   let Data = {};
   let env = process.env.NODE_ENV || 'development';
+  let envs = ['production', 'staging', 'development', 'other'];
   let envObject = {};
 
   function useEnv (options) {
@@ -56,6 +57,16 @@ function Kojak (...args) {
     }
   }
 
+  function setEnv (_env) {
+    env = _env;
+    buildObjectData();
+  }
+
+  function setEnvs (_envs) {
+    envs = _envs;
+    buildObjectData();
+  }
+
   function get (key, fallback) {
     return _.get(ObjectData, key, fallback);
   }
@@ -64,8 +75,15 @@ function Kojak (...args) {
     ObjectData = _.defaults.apply(_, [{}, envObject, Data].concat(Objects))
 
     traverse(ObjectData).forEach(function (x) {
-      if (_.has(x, env)) {
-        this.update(x[env])
+      // check if any of the `envs` keys are set
+      let isEnv = _.some(envs, (e) => _.has(x, e));
+      if (isEnv) {
+        // check if the current env is set
+        let thisEnv = _.has(x, env) ? env : 'other';
+        let fromEnv = _.get(x, thisEnv);
+        // omit any env-based args
+        let leftover = _.omit(x, envs)
+        this.update(_.defaults(fromEnv, leftover))
       }
     })
   }
@@ -114,7 +132,8 @@ function Kojak (...args) {
   let self = {
     get: (key, fallback) => { return get(key, fallback) },
     set: (data, value, override) => { return set(data, value, override) },
-    setEnv: (_env) => { return env = _env },
+    setEnv: setEnv,
+    setEnvs: setEnvs,
     useEnv: (options = {}) => { return useEnv(options) },
     toJSON: toJSON
   }

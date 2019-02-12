@@ -30,19 +30,52 @@ describe('getting and setting', () => {
     assert.equal(settings.person.name, 'bob')
   })
 
+  it('should prefer left-most initial arguments', () => {
+    const settings = new Kojak({foo: 'bar', one: 1}, {foo: 'woo', two: 2});
+    assert.equal(settings.foo, 'bar');
+    assert.equal(settings.one, 1);
+    assert.equal(settings.two, 2);
+  })
+
   it('should support deburring an env-based leaf value from get()', () => {
     const settings = Kojak();
     settings.setEnv('production');
     settings.foo = {production: 'x', development: 'y'}
     assert.equal(settings.foo, 'x')
-  })
+  });
 
   it('should support deburring an env-based node value from get()', () => {
     const settings = Kojak();
     settings.setEnv('production');
     settings.foo = {production: {color: 'red'}, development: {color: 'blue'}}
     assert.equal(settings.foo.color, 'red')    
-  })
+  });
+
+  it('should support deburring an env-based value, leaving other keys', async () => {
+    const settings = Kojak({
+      foo: {
+        production: {letter: 'x'},
+        development: {letter: 'y'},
+        letter: 'z',
+        number: 2
+      }
+    });
+    settings.setEnv('production');
+    assert.equal(settings.foo.letter, 'x')    
+    assert.equal(settings.foo.number, 2)    
+  });
+
+  it('should support an env-based object but without a supported env', async () => {
+    const settings = Kojak({
+      foo: {
+        production: 'foo',
+        development: 'bar',
+        other: 'nope'
+      }
+    })
+    settings.setEnv('staging');
+    assert.equal(settings.foo, 'nope');
+  });
   
 })
 
