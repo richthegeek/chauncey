@@ -81,9 +81,14 @@ function Kojak (...args) {
         // check if the current env is set
         let thisEnv = _.has(x, env) ? env : 'other';
         let fromEnv = _.get(x, thisEnv);
-        // omit any env-based args
-        let leftover = _.omit(x, envs)
-        this.update(_.defaults(fromEnv, leftover))
+
+        if (_.isObject(fromEnv)) {
+          // omit any env-based args
+          let leftover = _.omit(x, envs)
+          this.update(_.defaults(fromEnv, leftover))
+        } else {
+          this.update(fromEnv);
+        }
       }
     })
   }

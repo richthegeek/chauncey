@@ -75,6 +75,7 @@ describe('getting and setting', () => {
     })
     settings.setEnv('staging');
     assert.equal(settings.foo, 'nope');
+    assert.equal(typeof settings.foo, 'string');
   });
   
 })
